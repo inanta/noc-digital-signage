@@ -5,27 +5,34 @@
         <div class="flex flex-grow x-h-full overflow-hidden">
           <div class="overflow-hidden p-2 w-1/2">
             <div
-              class="bg-white flex flex-col h-full overflow-hidden rounded-md"
+              class="bg-white flex flex-col h-full overflow-hidden rounded-md shadow-xl shadow-black"
             >
-              <div class="flex flex-row mb-5 p-4 shadow-md text-2xl">
-                <i class="fas fa-sign-in-alt self-center w-1/3"></i>
-                <h2 class="self-center text-center w-full">Tugas</h2>
-                <div class="w-1/3">&nbsp;</div>
+              <div class="flex flex-row mb-5 p-4 shadow-md">
+                <i class="fas fa-laptop-medical self-center text-4xl w-1/3"></i>
+                <h2 class="self-center text-2xl text-center w-full">Tugas</h2>
+                <div class="w-1/3">
+                  <div
+                    v-if="tasks.length > 0"
+                    :class="{
+                      'animate__animated animate__flash animate__infinite animate__slower':
+                        tasks.length > 10
+                    }"
+                    class="bg-secondary h-11 ml-auto p-1.5 text-2xl text-center text-white rounded-full w-11"
+                  >
+                    {{ tasks.length }}
+                  </div>
+                </div>
               </div>
               <div
-                v-if="in_complaints.length > 0"
-                class="flex-grow h-full overflow-scroll"
+                v-if="tasks.length > 0"
+                class="flex-grow h-full overflow-hidden"
               >
-                <div
-                  v-for="item in in_complaints"
-                  :key="item.id"
-                  class="pb-3 px-4"
-                >
+                <div v-for="item in tasks" :key="item.id" class="pb-3 px-4">
                   <div class="flex flex-row">
                     <div class="font-bold text-2xl w-1/2">{{ item.name }}</div>
-                    <div class="text-right text-md w-1/2">{{ item.date }}</div>
+                    <div class="text-right text-lg w-1/2">{{ item.date }}</div>
                   </div>
-                  <div class="text-xl">{{ item.description }}</div>
+                  <div class="line-clamp-2 text-xl">{{ item.description }}</div>
                 </div>
               </div>
               <div v-else class="flex flex-grow py-5">
@@ -44,27 +51,63 @@
           </div>
           <div class="overflow-hidden p-2 w-1/2">
             <div
-              class="bg-white flex flex-col h-full overflow-hidden rounded-md"
+              class="bg-white flex flex-col h-full overflow-hidden rounded-md border-4 shadow-2xl border-secondary"
             >
-              <div class="flex flex-row mb-5 p-4 shadow-md text-2xl">
-                <i class="fas fa-sign-in-alt self-center w-1/3"></i>
-                <h2 class="self-center text-center w-full">Tugas Lapangan</h2>
-                <div class="w-1/3">&nbsp;</div>
+              <div class="flex flex-row mb-5 p-4 shadow-md">
+                <i class="fas fa-walking self-center text-4xl w-1/3"></i>
+                <h2 class="self-center text-2xl text-center w-full">
+                  Tugas Lapangan
+                </h2>
+                <div class="w-1/3">
+                  <div
+                    v-if="field_tasks.length > 0"
+                    :class="{
+                      'animate__animated animate__flash animate__infinite animate__slower':
+                        field_tasks.length > 10
+                    }"
+                    class="bg-secondary h-11 ml-auto p-1.5 text-2xl text-center text-white rounded-full w-11"
+                  >
+                    {{ field_tasks.length }}
+                  </div>
+                </div>
               </div>
               <div
-                v-if="out_complaints.length > 0"
-                class="flex-grow h-full overflow-scroll"
+                v-if="field_tasks.length > 0"
+                class="flex-grow h-full x-overflow-scroll"
               >
                 <div
-                  v-for="item in out_complaints"
+                  v-for="item in field_tasks"
                   :key="item.id"
                   class="pb-3 px-4"
                 >
                   <div class="flex flex-row">
-                    <div class="font-bold text-2xl w-1/2">{{ item.name }}</div>
-                    <div class="text-right text-md w-1/2">{{ item.date }}</div>
+                    <div class="w-1/3">
+                      <div class="font-bold text-2xl">{{ item.name }}</div>
+                    </div>
+                    <div class="capitalize text-center text-lg w-1/3">
+                      {{ item.date }}
+                    </div>
+                    <div class="w-1/3">
+                      <div
+                        :class="{
+                          'bg-red-600': item.status != 0,
+                          'bg-yellow-400': item.status == 0
+                        }"
+                        class="font-bold ml-auto px-3 py-0.5 rounded-md text-center text-md text-white w-3/4"
+                      >
+                        {{
+                          item.status == "0"
+                            ? "Belum Selesai"
+                            : "Belum Diperiksa"
+                        }}
+                      </div>
+                    </div>
                   </div>
-                  <div class="text-xl">{{ item.description }}</div>
+                  <div
+                    class="border-b border-tertiary line-clamp-2 pb-4 pt-2 text-xl"
+                  >
+                    {{ item.description }}
+                  </div>
                 </div>
               </div>
               <div v-else class="flex flex-grow py-5">
@@ -84,9 +127,9 @@
         </div>
         <div class="flex-grow-0 flex-shrink-0 p-2">
           <div class="bg-white h-full p-5 rounded-md">
-            <div class="grid grid-cols-4">
+            <div class="flex flex-row justify-between">
               <div>
-                <div class="grid grid-rows-1 text-left">
+                <div class="text-left">
                   <div class="font-bold self-center text-4xl">
                     {{ clockHH }}:{{ clockMM
                     }}<!-- :{{ clockSS }} -->
@@ -97,8 +140,23 @@
                   </div>
                 </div>
               </div>
-              <div class="">&nbsp;</div>
-              <div class="col-span-2 grid grid-rows-1">
+              <div class="">
+                <div class="font-bold self-center text-4xl text-center">
+                  Total Tugas
+                </div>
+                <div class="self-center text-3xl text-center capitalize">
+                  {{ tasks_count }}
+                </div>
+              </div>
+              <div class="">
+                <div class="font-bold self-center text-4xl text-center">
+                  Total Tugas Lapangan
+                </div>
+                <div class="self-center text-3xl text-center capitalize">
+                  {{ field_tasks_count }}
+                </div>
+              </div>
+              <div class="">
                 <div class="font-bold self-center text-4xl text-right">
                   {{ weatherTemp }}&#8451;
                 </div>
@@ -114,10 +172,19 @@
     </div>
     <div class="flex-none p-2 w-1/4">
       <div class="bg-white border border-tertiary h-full rounded-md">
-        <div class="flex flex-row mb-5 p-4 shadow-md text-2xl">
-          <i class="fas fa-users self-center w-1/3"></i>
-          <h2 class="col-span-5 self-center text-center w-full">Tim Layanan</h2>
-          <div class="w-1/3">&nbsp;</div>
+        <div class="flex flex-row mb-5 p-4 shadow-md">
+          <i class="fas fa-users text-4xl self-center w-1/3"></i>
+          <h2 class="col-span-5 self-center text-2xl text-center w-full">
+            Tim Layanan
+          </h2>
+          <div class="w-1/3">
+            <div
+              v-if="users.length > 0"
+              class="bg-secondary h-11 ml-auto p-1.5 text-2xl text-center text-white rounded-full w-11"
+            >
+              {{ users.length }}
+            </div>
+          </div>
         </div>
         <div class="flex flex-col">
           <div v-for="user in users" :key="user.uid" class="pb-3 px-4">
@@ -137,7 +204,7 @@
                 <div class="font-bold line-clamp-1 text-2xl">
                   {{ user.name }}
                 </div>
-                <div class="text-xl line-clamp-2">
+                <div class="line-clamp-2 text-xl">
                   <span v-if="user.presence_out == null">
                     {{ user.status }}
                   </span>
@@ -164,7 +231,7 @@ export default {
   },
   data: function () {
     return {
-      in_complaints: [
+      tasks: [
         {
           name: "Bapak Surya",
           description: "Tidak bisa internet",
@@ -176,7 +243,9 @@ export default {
           date: "05/05/2022"
         }
       ],
-      out_complaints: [],
+      tasks_count: 0,
+      field_tasks: [],
+      field_tasks_count: 0,
       users: [
         {
           uid: 31,
@@ -291,6 +360,28 @@ export default {
 
         if (self.hash != response.data.hash) {
           self.hash = response.data.hash;
+          self.tasks_count = response.data.tasks_count;
+          self.field_tasks_count = response.data.field_tasks_count;
+
+          self.field_tasks.splice(0);
+
+          for (
+            let index = 0;
+            index < response.data.field_tasks.length;
+            index++
+          ) {
+            const task = response.data.field_tasks[index];
+
+            self.field_tasks.push(task);
+          }
+
+          self.tasks.splice(0);
+
+          for (let index = 0; index < response.data.tasks.length; index++) {
+            const task = response.data.tasks[index];
+
+            self.tasks.push(task);
+          }
 
           self.users.splice(0);
 
@@ -299,21 +390,9 @@ export default {
 
             self.users.push(presence);
           }
-
-          self.in_complaints.splice(0);
-
-          for (
-            let index = 0;
-            index < response.data.in_complaints.length;
-            index++
-          ) {
-            const in_complaint = response.data.in_complaints[index];
-
-            self.in_complaints.push(in_complaint);
-          }
         }
 
-        // console.log(response.data.in_complaints);
+        // console.log(response.data.tasks);
       });
     },
     getClock: function () {
@@ -341,7 +420,7 @@ export default {
         self.weatherIconCode = response.data.weather[0].icon;
         self.weatherStatus = response.data.weather[0].description;
         self.weatherTemp = Math.round(response.data.main.feels_like);
-        console.log(response.data);
+        // console.log(response.data);
       });
     }
   }

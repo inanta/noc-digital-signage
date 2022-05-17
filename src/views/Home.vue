@@ -1,63 +1,88 @@
 <template>
-  <div class="font-body grid grid-cols-4 h-full p-4 text-secondary">
-    <div class="col-span-3 overflow-hidden">
-      <div class="grid grid-flow-row auto-rows-min">
-        <div class="grid grid-cols-2 overflow-hidden">
-          <div class="p-2 h-full overflow-hidden">
-            <div class="bg-white h-full overflow-hidden rounded-md">
-              <div class="grid grid-cols-7 mb-5 p-4 shadow-md text-2xl">
-                <i class="fas fa-sign-in-alt self-center"></i>
-                <h2 class="col-span-5 self-center text-center">Komplain</h2>
-                <div>&nbsp;</div>
+  <div class="flex font-body h-full p-4 text-secondary">
+    <div class="w-full">
+      <div class="flex flex-col h-full">
+        <div class="flex flex-grow x-h-full overflow-hidden">
+          <div class="overflow-hidden p-2 w-1/2">
+            <div
+              class="bg-white flex flex-col h-full overflow-hidden rounded-md"
+            >
+              <div class="flex flex-row mb-5 p-4 shadow-md text-2xl">
+                <i class="fas fa-sign-in-alt self-center w-1/3"></i>
+                <h2 class="self-center text-center w-full">Tugas</h2>
+                <div class="w-1/3">&nbsp;</div>
               </div>
-              <div class="grid-grid-rows-1">
+              <div
+                v-if="in_complaints.length > 0"
+                class="flex-grow h-full overflow-scroll"
+              >
                 <div
                   v-for="item in in_complaints"
                   :key="item.id"
                   class="pb-3 px-4"
                 >
-                  <div class="grid grid-cols-2">
-                    <div class="font-bold text-2xl">{{ item.name }}</div>
-                    <div class="text-right text-md">{{ item.date }}</div>
+                  <div class="flex flex-row">
+                    <div class="font-bold text-2xl w-1/2">{{ item.name }}</div>
+                    <div class="text-right text-md w-1/2">{{ item.date }}</div>
                   </div>
                   <div class="text-xl">{{ item.description }}</div>
                 </div>
               </div>
-            </div>
-          </div>
-          <div class="p-2">
-            <div class="bg-white h-full rounded-md">
-              <div class="grid grid-cols-7 p-4 shadow-md text-2xl">
-                <i class="fas fa-sign-out-alt self-center"></i>
-                <h2 class="col-span-5 self-center text-center">
-                  Komplain Lapangan
-                </h2>
-                <div>&nbsp;</div>
-              </div>
-              <div v-if="out_complaints.length > 0" class="grid-grid-rows-1">
-                <!-- <div v-for="item in in_complaints" :key="item.id" class="p-4">
-                  <div class="grid grid-cols-2">
-                    <div class="font-bold text-2xl">{{ item.name }}</div>
-                    <div class="text-right text-sm">{{ item.date }}</div>
-                  </div>
-                  <div class="text-md">{{ item.description }}</div>
-                </div> -->
-              </div>
-              <div v-else class="flex items-center justify-center py-5">
-                <div class="overflow-hidden w-1/2">
+              <div v-else class="flex flex-grow py-5">
+                <div class="m-auto w-4/5">
                   <img
                     class="h-full w-full"
                     src="@/assets/images/undraw_blank_canvas_re_2hwy.svg"
                   />
-                  <div class="p-2 text-xl text-center">
-                    Hore! Tidak Ada Komplain Lapangan.
+                  <div class="p-2 text-2xl text-center">
+                    <i class="far fa-thumbs-up"></i> Luar Biasa! Tidak Ada
+                    Tugas.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="overflow-hidden p-2 w-1/2">
+            <div
+              class="bg-white flex flex-col h-full overflow-hidden rounded-md"
+            >
+              <div class="flex flex-row mb-5 p-4 shadow-md text-2xl">
+                <i class="fas fa-sign-in-alt self-center w-1/3"></i>
+                <h2 class="self-center text-center w-full">Tugas Lapangan</h2>
+                <div class="w-1/3">&nbsp;</div>
+              </div>
+              <div
+                v-if="out_complaints.length > 0"
+                class="flex-grow h-full overflow-scroll"
+              >
+                <div
+                  v-for="item in out_complaints"
+                  :key="item.id"
+                  class="pb-3 px-4"
+                >
+                  <div class="flex flex-row">
+                    <div class="font-bold text-2xl w-1/2">{{ item.name }}</div>
+                    <div class="text-right text-md w-1/2">{{ item.date }}</div>
+                  </div>
+                  <div class="text-xl">{{ item.description }}</div>
+                </div>
+              </div>
+              <div v-else class="flex flex-grow py-5">
+                <div class="m-auto w-4/5">
+                  <img
+                    class="h-full w-full"
+                    src="@/assets/images/undraw_blank_canvas_re_2hwy.svg"
+                  />
+                  <div class="p-2 text-2xl text-center">
+                    <i class="far fa-thumbs-up"></i> Luar Biasa! Tidak Ada Tugas
+                    Lapangan.
                   </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-        <div class="p-2">
+        <div class="flex-grow-0 flex-shrink-0 p-2">
           <div class="bg-white h-full p-5 rounded-md">
             <div class="grid grid-cols-4">
               <div>
@@ -87,17 +112,17 @@
         </div>
       </div>
     </div>
-    <div class="h-full p-2">
+    <div class="flex-none p-2 w-1/4">
       <div class="bg-white border border-tertiary h-full rounded-md">
-        <div class="grid grid-cols-7 mb-5 p-4 shadow-md text-2xl">
-          <i class="fas fa-users self-center"></i>
-          <h2 class="col-span-5 self-center text-center">Tim Layanan</h2>
-          <div>&nbsp;</div>
+        <div class="flex flex-row mb-5 p-4 shadow-md text-2xl">
+          <i class="fas fa-users self-center w-1/3"></i>
+          <h2 class="col-span-5 self-center text-center w-full">Tim Layanan</h2>
+          <div class="w-1/3">&nbsp;</div>
         </div>
-        <div class="grid grid-rows-1">
+        <div class="flex flex-col">
           <div v-for="user in users" :key="user.uid" class="pb-3 px-4">
-            <div class="border-b border-tertiary grid grid-cols-4 pb-4">
-              <div class="relative">
+            <div class="border-b border-tertiary flex pb-4">
+              <div class="relative w-1/4">
                 <img
                   :x-class="userPresenceStatus(user)"
                   :src="userProfilePicture(user.uid)"
@@ -108,8 +133,8 @@
                   class="absolute border-4 border-white bottom-0 h-7 right-0 rounded-full w-7"
                 ></div>
               </div>
-              <div class="col-span-3 grid gridd-rows-1 pl-2">
-                <div class="font-bold line-clamp-1 self-end text-2xl">
+              <div class="flex flex-col justify-center pl-3 w-3/4">
+                <div class="font-bold line-clamp-1 text-2xl">
                   {{ user.name }}
                 </div>
                 <div class="text-xl line-clamp-2">
@@ -308,7 +333,6 @@ export default {
     },
     getWeather: function () {
       let self = this;
-
       axios({
         method: "get",
         url: "https://api.openweathermap.org/data/2.5/weather?lat=-6.8861&lon=107.581&lang=id&units=metric&appid=59ce474bf023e834ca54e5966dbaae0e",

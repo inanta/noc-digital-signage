@@ -5,7 +5,7 @@
         <div class="flex flex-grow x-h-full overflow-hidden">
           <div class="overflow-hidden p-2 w-1/2">
             <div
-              class="bg-white flex flex-col h-full overflow-hidden rounded-md shadow-xl shadow-black"
+              class="bg-white border-2 border-secondary flex flex-col h-full overflow-hidden rounded-md shadow-md"
             >
               <div class="flex flex-row mb-5 p-4 shadow-md">
                 <i class="fas fa-laptop-medical self-center text-4xl w-1/3"></i>
@@ -29,10 +29,67 @@
               >
                 <div v-for="item in tasks" :key="item.id" class="pb-3 px-4">
                   <div class="flex flex-row">
-                    <div class="font-bold text-2xl w-1/2">{{ item.name }}</div>
-                    <div class="text-right text-lg w-1/2">{{ item.date }}</div>
+                    <div class="flex w-1/3">
+                      <div
+                        :class="{
+                          'animate__animated animate__flash animate__infinite animate__slower bg-red-600':
+                            item.is_delayed,
+                          'bg-green-600': !item.is_delayed
+                        }"
+                        class="h-5 mr-2 rounded-full w-5 mt-1.5"
+                      ></div>
+                      <div class="font-bold text-2xl">{{ item.name }}</div>
+                      <i
+                        v-if="item.priority > 2"
+                        class="fas fa-exclamation-circle animate__animated animate__flash animate__infinite animate__slower text-xl pl-2 pt-0.5"
+                      ></i>
+                      <div v-if="item.priority > 3" class="">
+                        <i
+                          class="fas fa-exclamation-circle animate__animated animate__flash animate__infinite animate__slower text-xl pl-1 pt-0.5 inline-block"
+                        ></i>
+                      </div>
+                    </div>
+                    <div class="capitalize flex text-left w-1/3">
+                      <!-- <div
+                        :class="{
+                          'bg-red-600': item.is_delayed,
+                          'bg-green-600': !item.is_delayed
+                        }"
+                        class="font-bold ml-auto px-3 py-0.5 rounded-md text-center text-md text-white w-3/4"
+                      > -->
+
+                      <div
+                        :class="{
+                          'animate__animated animate__flash animate__infinite animate__slower ':
+                            item.is_delayed
+                        }"
+                        class="text-center text-xl w-full"
+                      >
+                        {{ item.date }}
+                      </div>
+                      <!-- </div> -->
+                    </div>
+                    <div class="w-1/3">
+                      <div
+                        :class="{
+                          'bg-red-600': item.status != 0,
+                          'bg-yellow-400': item.status == 0
+                        }"
+                        class="font-bold ml-auto px-3 py-0.5 rounded-md text-center text-md text-white w-3/4"
+                      >
+                        {{
+                          item.status == "0"
+                            ? "Belum Selesai"
+                            : "Belum Diperiksa"
+                        }}
+                      </div>
+                    </div>
                   </div>
-                  <div class="line-clamp-2 text-xl">{{ item.description }}</div>
+                  <div
+                    class="border-b border-tertiary line-clamp-2 pb-4 pt-2 text-xl"
+                  >
+                    {{ item.description }}
+                  </div>
                 </div>
               </div>
               <div v-else class="flex flex-grow py-5">
@@ -51,7 +108,7 @@
           </div>
           <div class="overflow-hidden p-2 w-1/2">
             <div
-              class="bg-white flex flex-col h-full overflow-hidden rounded-md border-4 shadow-2xl border-secondary"
+              class="bg-white border-2 border-secondary flex flex-col h-full overflow-hidden rounded-md shadow-md"
             >
               <div class="flex flex-row mb-5 p-4 shadow-md">
                 <i class="fas fa-walking self-center text-4xl w-1/3"></i>
@@ -81,19 +138,36 @@
                   class="pb-3 px-4"
                 >
                   <div class="flex flex-row">
-                    <div class="w-1/3">
+                    <div class="flex w-2/4">
                       <div class="font-bold text-2xl">{{ item.name }}</div>
+                      <i
+                        v-if="item.priority > 2"
+                        class="fas fa-exclamation-circle animate__animated animate__flash animate__infinite animate__slower text-xl pl-2 pt-0.5"
+                      ></i>
+                      <div v-if="item.priority > 3" class="">
+                        <i
+                          class="fas fa-exclamation-circle animate__animated animate__flash animate__infinite animate__slower text-xl pl-1 pt-0.5 inline-block"
+                        ></i>
+                      </div>
                     </div>
-                    <div class="capitalize text-center text-lg w-1/3">
-                      {{ item.date }}
+                    <div class="capitalize text-center w-1/4">
+                      <div
+                        :class="{
+                          'bg-red-600': item.is_delayed,
+                          'bg-green-600': !item.is_delayed
+                        }"
+                        class="font-bold mx-auto px-3 py-0.5 rounded-md text-center text-md text-white w-4/5"
+                      >
+                        {{ item.date }}
+                      </div>
                     </div>
-                    <div class="w-1/3">
+                    <div class="w-1/4">
                       <div
                         :class="{
                           'bg-red-600': item.status != 0,
                           'bg-yellow-400': item.status == 0
                         }"
-                        class="font-bold ml-auto px-3 py-0.5 rounded-md text-center text-md text-white w-3/4"
+                        class="font-bold ml-auto px-3 py-0.5 rounded-md text-center text-md text-white w-full"
                       >
                         {{
                           item.status == "0"
@@ -126,7 +200,9 @@
           </div>
         </div>
         <div class="flex-grow-0 flex-shrink-0 p-2">
-          <div class="bg-white h-full p-5 rounded-md">
+          <div
+            class="bg-white border-2 border-secondary h-full p-5 rounded-md shadow-md"
+          >
             <div class="flex flex-row justify-between">
               <div>
                 <div class="text-left">
@@ -171,7 +247,9 @@
       </div>
     </div>
     <div class="flex-none p-2 w-1/4">
-      <div class="bg-white border border-tertiary h-full rounded-md">
+      <div
+        class="bg-white border-2 border-secondary h-full overflow-hidden rounded-md shadow-md"
+      >
         <div class="flex flex-row mb-5 p-4 shadow-md">
           <i class="fas fa-users text-4xl self-center w-1/3"></i>
           <h2 class="col-span-5 self-center text-2xl text-center w-full">
@@ -191,24 +269,44 @@
             <div class="border-b border-tertiary flex pb-4">
               <div class="relative w-1/4">
                 <img
+                  v-if="user.picture != ''"
                   :x-class="userPresenceStatus(user)"
-                  :src="userProfilePicture(user.uid)"
+                  :src="user.picture"
                   class="border border-tertiary p-1 rounded-full w-full"
                 />
+                <img
+                  v-else
+                  src="@/assets/images/no-profile-pic.jpg"
+                  class="border border-tertiary p-1 rounded-full w-full"
+                />
+
                 <div
                   :class="userStatusBadge(user)"
-                  class="absolute border-4 border-white bottom-0 h-7 right-0 rounded-full w-7"
-                ></div>
+                  class="absolute border-4 border-white bottom-0 font-bold h-10 right-0 p-0.5 rounded-full text-center text-lg text-white w-10"
+                >
+                  {{ userStatusBadgeCount(user) }}
+                </div>
               </div>
               <div class="flex flex-col justify-center pl-3 w-3/4">
                 <div class="font-bold line-clamp-1 text-2xl">
                   {{ user.name }}
                 </div>
-                <div class="line-clamp-2 text-xl">
-                  <span v-if="user.presence_out == null">
-                    {{ user.status }}
-                  </span>
-                  <span v-else></span>
+                <div
+                  v-for="(status, key) in user.status"
+                  :key="status.text"
+                  class="line-clamp-2 text-xl"
+                >
+                  <div
+                    v-if="user.current_status == key"
+                    class="animate__animated animate__slideInUp"
+                  >
+                    <span
+                      v-if="userStatusBadgeCount(user) > 1"
+                      class="bg-secondary px-2 py-0.5 rounded-md text-sm text-white"
+                      >{{ key + 1 }} / {{ userStatusBadgeCount(user) }}</span
+                    >
+                    &nbsp;{{ status.text }}
+                  </div>
                 </div>
               </div>
             </div>
@@ -309,6 +407,7 @@ export default {
     let self = this;
 
     self.fetchData();
+    self.cycleStatus();
     self.getWeather();
 
     setInterval(function () {
@@ -331,19 +430,40 @@ export default {
     }
   },
   methods: {
-    userProfilePicture: function (uid) {
-      return (
-        "http://noc.maranatha.edu/staff/apps/ihollo/images/profile/" +
-        uid +
-        ".jpg"
-      );
+    userProfilePicture: function (user) {
+      axios({
+        method: "get",
+        url:
+          "http://noc.maranatha.edu/staff/apps/ihollo/images/profile/" +
+          user.uid +
+          ".jpg"
+      })
+        .then(function () {
+          user.picture =
+            "http://noc.maranatha.edu/staff/apps/ihollo/images/profile/" +
+            user.uid +
+            ".jpg";
+        })
+        .catch(function () {
+          user.picture = "";
+        });
     },
     userStatusBadge: function (user) {
       return user.presence_out != null
         ? "bg-tertiary"
-        : user.status_type == 0
+        : user.status.length == 0 // user.status_type == 0
         ? "bg-green-600"
         : "bg-red-600";
+    },
+    userStatusBadgeCount: function (user) {
+      if (
+        typeof user.status !== "undefined" &&
+        typeof user.status.length !== "undefined"
+      ) {
+        return user.status.length;
+      }
+
+      return "";
     },
     userPresenceStatus: function (user) {
       return user.presence_out == null ? "border-green-600" : "border-tertiary";
@@ -386,7 +506,14 @@ export default {
           self.users.splice(0);
 
           for (let index = 0; index < response.data.presences.length; index++) {
+            // response.data.presences[index]["visible_status"] = 0;
             const presence = response.data.presences[index];
+            presence["current_status"] = 0;
+            // presence["picture"] = "";
+
+            // self.userProfilePicture(presence);
+
+            console.log(presence);
 
             self.users.push(presence);
           }
@@ -394,6 +521,25 @@ export default {
 
         // console.log(response.data.tasks);
       });
+    },
+    cycleStatus: function () {
+      let self = this;
+
+      setInterval(function () {
+        for (let index = 0; index < self.users.length; index++) {
+          const current_user = self.users[index];
+
+          if (current_user.status.length <= 1) {
+            continue;
+          }
+
+          if (current_user.current_status + 1 >= current_user.status.length) {
+            current_user.current_status = 0;
+          } else {
+            current_user.current_status++;
+          }
+        }
+      }, 5000);
     },
     getClock: function () {
       let date = new Date();

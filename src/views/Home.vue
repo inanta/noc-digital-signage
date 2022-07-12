@@ -302,7 +302,11 @@
                   >
                     <span
                       v-if="userStatusBadgeCount(user) > 1"
-                      class="bg-secondary px-2 py-0.5 rounded-md text-sm text-white"
+                      :class="{
+                        'bg-secondary': !status.is_overdue,
+                        'bg-red-600': status.is_overdue
+                      }"
+                      class="px-2 py-0.5 rounded-md text-sm text-white"
                       >{{ key + 1 }} / {{ userStatusBadgeCount(user) }}</span
                     >
                     &nbsp;{{ status.text }}

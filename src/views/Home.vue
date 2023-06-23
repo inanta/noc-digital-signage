@@ -455,7 +455,7 @@ export default {
     userStatusBadge: function (user) {
       return user.presence_out != null
         ? "bg-tertiary"
-        : user.status.length == 0 // user.status_type == 0
+        : typeof user.status !== "undefined" && user.status.length == 0 // user.status_type == 0
         ? "bg-green-600"
         : "bg-red-600";
     },
@@ -517,7 +517,7 @@ export default {
 
             // self.userProfilePicture(presence);
 
-            console.log(presence);
+            // console.log(presence);
 
             self.users.push(presence);
           }

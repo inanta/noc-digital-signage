@@ -308,6 +308,15 @@
                       }"
                       class="px-2 py-0.5 rounded-md text-sm text-white"
                       >{{ key + 1 }} / {{ userStatusBadgeCount(user) }}</span
+                    >&nbsp;
+                    <span
+                      v-if="userStatusBadgeCount(user) > 1"
+                      :class="{
+                        'bg-secondary': !status.is_overdue,
+                        'bg-red-600': status.is_overdue
+                      }"
+                      class="px-2 py-0.5 rounded-md text-sm text-white"
+                      >{{ status.created_time }}</span
                     >
                     &nbsp;{{ status.text }}
                   </div>
@@ -407,6 +416,13 @@ export default {
       hash: ""
     };
   },
+  computed: {
+    weatherIcon: function () {
+      return (
+        "http://openweathermap.org/img/wn/" + this.weatherIconCode + "@2x.png"
+      );
+    }
+  },
   mounted: function () {
     let self = this;
 
@@ -425,13 +441,6 @@ export default {
     setInterval(function () {
       self.getWeather();
     }, 7200000);
-  },
-  computed: {
-    weatherIcon: function () {
-      return (
-        "http://openweathermap.org/img/wn/" + this.weatherIconCode + "@2x.png"
-      );
-    }
   },
   methods: {
     userProfilePicture: function (user) {
@@ -480,9 +489,11 @@ export default {
         url: "http://noc.maranatha.edu/ds-service/",
         responseType: "stream"
       }).then(function (response) {
-        // console.log(response);
-
         if (self.hash != response.data.hash) {
+          response.data.presences.sort(function (item_1, item_2) {
+            return item_2.status.length - item_1.status.length;
+          });
+
           self.hash = response.data.hash;
           self.tasks_count = response.data.tasks_count;
           self.field_tasks_count = response.data.field_tasks_count;

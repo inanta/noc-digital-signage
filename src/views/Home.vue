@@ -3,12 +3,14 @@
     <div class="w-full">
       <div class="flex flex-col h-full">
         <div class="flex flex-grow x-h-full overflow-hidden">
-          <div class="overflow-hidden p-2 w-1/2">
+          <div class="overflow-hidden p-2 w-full">
             <div
               class="bg-white border-2 border-secondary flex flex-col h-full overflow-hidden rounded-md shadow-md"
             >
-              <div class="flex flex-row mb-5 p-4 shadow-md">
-                <i class="fas fa-laptop-medical self-center text-4xl w-1/3"></i>
+              <div class="flex flex-row p-4 shadow-md z-20">
+                <div class="self-center text-4xl w-1/3">
+                  <span class="mdi mdi-calendar-check"></span>
+                </div>
                 <h2 class="self-center text-2xl text-center w-full">Tugas</h2>
                 <div class="w-1/3">
                   <div
@@ -25,32 +27,42 @@
               </div>
               <div
                 v-if="tasks.length > 0"
+                ref="tasks-container"
                 class="flex-grow h-full overflow-hidden"
               >
-                <div v-for="item in tasks" :key="item.id" class="pb-3 px-4">
-                  <div class="flex flex-row">
-                    <div class="flex w-1/3">
-                      <div
-                        :class="{
-                          'animate__animated animate__flash animate__infinite animate__slower bg-red-600':
-                            item.is_delayed,
-                          'bg-green-600': !item.is_delayed
-                        }"
-                        class="h-5 mr-2 rounded-full w-5 mt-1.5"
-                      ></div>
-                      <div class="font-bold text-2xl">{{ item.name }}</div>
-                      <i
-                        v-if="item.priority > 2"
-                        class="fas fa-exclamation-circle animate__animated animate__flash animate__infinite animate__slower text-xl pl-2 pt-0.5"
-                      ></i>
-                      <div v-if="item.priority > 3" class="">
+                <div
+                  v-for="item in tasks"
+                  :key="item.id"
+                  class="overflow-hidden h-[14.285%]"
+                >
+                  <div
+                    class="animate__animated animate__slideInDown border border-tertiary py-3 px-4"
+                    :xx="item.id"
+                    x="s"
+                  >
+                    <div class="flex flex-row">
+                      <div class="flex w-1/3">
+                        <div
+                          :class="{
+                            'animate__animated animate__flash animate__infinite animate__slower bg-red-600':
+                              item.is_delayed,
+                            'bg-green-600': !item.is_delayed
+                          }"
+                          class="h-5 mr-2 rounded-full w-5 mt-1.5"
+                        ></div>
+                        <div class="font-bold text-2xl">{{ item.name }}</div>
                         <i
-                          class="fas fa-exclamation-circle animate__animated animate__flash animate__infinite animate__slower text-xl pl-1 pt-0.5 inline-block"
+                          v-if="item.priority > 2"
+                          class="fas fa-exclamation-circle animate__animated animate__flash animate__infinite animate__slower text-xl pl-2 pt-0.5"
                         ></i>
+                        <div v-if="item.priority > 3" class="">
+                          <i
+                            class="fas fa-exclamation-circle animate__animated animate__flash animate__infinite animate__slower text-xl pl-1 pt-0.5 inline-block"
+                          ></i>
+                        </div>
                       </div>
-                    </div>
-                    <div class="capitalize flex text-left w-1/3">
-                      <!-- <div
+                      <div class="capitalize flex text-left w-1/3">
+                        <!-- <div
                         :class="{
                           'bg-red-600': item.is_delayed,
                           'bg-green-600': !item.is_delayed
@@ -58,37 +70,38 @@
                         class="font-bold ml-auto px-3 py-0.5 rounded-md text-center text-md text-white w-3/4"
                       > -->
 
-                      <div
-                        :class="{
-                          'animate__animated animate__flash animate__infinite animate__slower ':
-                            item.is_delayed
-                        }"
-                        class="text-center text-xl w-full"
-                      >
-                        {{ item.date }}
+                        <div
+                          :class="{
+                            'animate__animated animate__flash animate__infinite animate__slower ':
+                              item.is_delayed
+                          }"
+                          class="text-center text-xl w-full"
+                        >
+                          {{ item.date }}
+                        </div>
+                        <!-- </div> -->
                       </div>
-                      <!-- </div> -->
-                    </div>
-                    <div class="w-1/3">
-                      <div
-                        :class="{
-                          'bg-red-600': item.status != 0,
-                          'bg-yellow-400': item.status == 0
-                        }"
-                        class="font-bold ml-auto px-3 py-0.5 rounded-md text-center text-md text-white w-3/4"
-                      >
-                        {{
-                          item.status == "0"
-                            ? "Belum Selesai"
-                            : "Belum Diperiksa"
-                        }}
+                      <div class="w-1/3">
+                        <div
+                          :class="{
+                            'bg-red-600': item.status != 0,
+                            'bg-yellow-400': item.status == 0
+                          }"
+                          class="font-bold ml-auto px-3 py-0.5 rounded-md text-center text-md text-white w-3/4"
+                        >
+                          {{
+                            item.status == "0"
+                              ? "Belum Selesai"
+                              : "Belum Diperiksa"
+                          }}
+                        </div>
                       </div>
                     </div>
-                  </div>
-                  <div
-                    class="border-b border-tertiary line-clamp-2 pb-4 pt-2 text-xl"
-                  >
-                    {{ item.description }}
+                    <div
+                      class="xborder-b border-tertiary line-clamp-2 pb-4 pt-2 text-xl"
+                    >
+                      {{ item.description }}
+                    </div>
                   </div>
                 </div>
               </div>
@@ -106,7 +119,7 @@
               </div>
             </div>
           </div>
-          <div class="overflow-hidden p-2 w-1/2">
+          <!-- <div class="overflow-hidden p-2 w-1/2">
             <div
               class="bg-white border-2 border-secondary flex flex-col h-full overflow-hidden rounded-md shadow-md"
             >
@@ -197,7 +210,7 @@
                 </div>
               </div>
             </div>
-          </div>
+          </div> -->
         </div>
         <div class="flex-grow-0 flex-shrink-0 p-2">
           <div
@@ -207,8 +220,9 @@
               <div>
                 <div class="text-left">
                   <div class="font-bold self-center text-4xl">
-                    {{ clockHH }}:{{ clockMM
-                    }}<!-- :{{ clockSS }} -->
+                    <span class="mdi mdi-clock"></span> {{ clockHH }}:{{
+                      clockMM
+                    }}:{{ clockSS }}
                   </div>
                   <div class="self-center text-3xl">
                     {{ dateDayName }}, {{ dateDay }} {{ dateMonth }}
@@ -225,16 +239,10 @@
                 </div>
               </div>
               <div class="">
-                <div class="font-bold self-center text-4xl text-center">
-                  Total Tugas Lapangan
-                </div>
-                <div class="self-center text-3xl text-center capitalize">
-                  {{ field_tasks_count }}
-                </div>
-              </div>
-              <div class="">
                 <div class="font-bold self-center text-4xl text-right">
-                  {{ weatherTemp }}&#8451;
+                  <span class="mdi mdi-thermometer"></span>
+                  {{ weatherTemp }}
+                  <span class="mdi mdi-temperature-celsius"></span>
                 </div>
                 <div class="self-center text-3xl text-right capitalize">
                   <img :src="weatherIcon" class="inline-block h-8" />
@@ -251,7 +259,10 @@
         class="bg-white border-2 border-secondary h-full overflow-hidden rounded-md shadow-md"
       >
         <div class="flex flex-row mb-5 p-4 shadow-md">
-          <i class="fas fa-users text-4xl self-center w-1/3"></i>
+          <div class="text-4xl self-center w-1/3">
+            <span class="mdi mdi-account-group"></span>
+          </div>
+
           <h2 class="col-span-5 self-center text-2xl text-center w-full">
             Tim Layanan
           </h2>
@@ -265,7 +276,11 @@
           </div>
         </div>
         <div class="flex flex-col">
-          <div v-for="user in users" :key="user.uid" class="pb-3 px-4">
+          <div
+            v-for="user in users"
+            :key="user.uid"
+            class="pb-3 px-4 h-[14.285%]"
+          >
             <div class="border-b border-tertiary flex pb-4">
               <div class="relative w-1/4">
                 <img
@@ -334,6 +349,7 @@
 // @ is an alias to /src
 // import HelloWorld from "@/components/HelloWorld.vue";
 import axios from "axios";
+import demoData from "@/assets/js/demo-data.js";
 
 export default {
   name: "Home",
@@ -342,44 +358,11 @@ export default {
   },
   data: function () {
     return {
-      tasks: [
-        {
-          name: "Bapak Surya",
-          description: "Tidak bisa internet",
-          date: "05/05/2022"
-        },
-        {
-          name: "Ibu Maria",
-          description: "Tidak bisa cetak dokumen",
-          date: "05/05/2022"
-        }
-      ],
+      tasks: demoData.tasks,
       tasks_count: 0,
       field_tasks: [],
       field_tasks_count: 0,
-      users: [
-        {
-          uid: 31,
-          name: "Inanta Martsanto",
-          status: "Pengerjaan Digital Signage",
-          status_type: "0",
-          presence_out: null
-        },
-        {
-          uid: 144,
-          name: "Donny Trijatmiko",
-          status:
-            "Konfigurasi cPanel dan server untuk deployment CI/CD aplikasi digital signage",
-          status_type: 1,
-          presence_out: null
-        },
-        {
-          uid: 139,
-          name: "Sherly Sanjaya",
-          status_type: 1,
-          presence_out: 1
-        }
-      ],
+      users: demoData.users,
       dayNames: [
         "Minggu",
         "Senin",
@@ -410,6 +393,7 @@ export default {
       clockHH: 0,
       clockMM: 0,
       clockSS: 0,
+      taskItemContainerHeight: "auto",
       weatherStatus: "",
       weatherTemp: 26,
       weatherIconCode: "01d",
@@ -428,6 +412,7 @@ export default {
 
     self.fetchData();
     self.cycleStatus();
+    self.cycleTask();
     self.getWeather();
 
     setInterval(function () {
@@ -441,6 +426,9 @@ export default {
     setInterval(function () {
       self.getWeather();
     }, 7200000);
+
+    // console.log("S", this.$refs["tasks-container"]);
+    // console.log(self.$refs["tasks-container"].height);
   },
   methods: {
     userProfilePicture: function (user) {
@@ -487,9 +475,12 @@ export default {
       axios({
         method: "get",
         url: "http://noc.maranatha.edu/ds-service/",
-        responseType: "stream"
+        responseType: "json"
       }).then(function (response) {
-        if (self.hash != response.data.hash) {
+        if (
+          typeof response.hasj !== "undefined" &&
+          self.hash != response.data.hash
+        ) {
           response.data.presences.sort(function (item_1, item_2) {
             return item_2.status.length - item_1.status.length;
           });
@@ -537,6 +528,16 @@ export default {
         // console.log(response.data.tasks);
       });
     },
+    cycleTask: function () {
+      const self = this;
+
+      setTimeout(function () {
+        const last_task = self.tasks.pop();
+
+        self.tasks.unshift(last_task);
+        self.cycleTask();
+      }, 4000);
+    },
     cycleStatus: function () {
       let self = this;
 
@@ -576,7 +577,7 @@ export default {
       axios({
         method: "get",
         url: "https://api.openweathermap.org/data/2.5/weather?lat=-6.8861&lon=107.581&lang=id&units=metric&appid=59ce474bf023e834ca54e5966dbaae0e",
-        responseType: "stream"
+        responseType: "json"
       }).then(function (response) {
         self.weatherIconCode = response.data.weather[0].icon;
         self.weatherStatus = response.data.weather[0].description;

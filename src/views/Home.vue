@@ -25,44 +25,52 @@
                   </div>
                 </div>
               </div>
+
               <div
                 v-if="tasks.length > 0"
                 ref="tasks-container"
-                class="flex-grow h-full overflow-hidden"
+                class="h-full overflow-hidden"
               >
-                <div
-                  v-for="item in tasks"
-                  :key="item.id"
-                  class="overflow-hidden h-[14.285%]"
-                >
-                  <div
-                    class="animate__animated animate__slideInDown border border-tertiary py-3 px-4"
-                    :xx="item.id"
-                    x="s"
-                  >
-                    <div class="flex flex-row">
-                      <div class="flex w-1/3">
-                        <div
-                          :class="{
-                            'animate__animated animate__flash animate__infinite animate__slower bg-red-600':
-                              item.is_delayed,
-                            'bg-green-600': !item.is_delayed
-                          }"
-                          class="h-5 mr-2 rounded-full w-5 mt-1.5"
-                        ></div>
-                        <div class="font-bold text-2xl">{{ item.name }}</div>
-                        <i
-                          v-if="item.priority > 2"
-                          class="fas fa-exclamation-circle animate__animated animate__flash animate__infinite animate__slower text-xl pl-2 pt-0.5"
-                        ></i>
-                        <div v-if="item.priority > 3" class="">
-                          <i
-                            class="fas fa-exclamation-circle animate__animated animate__flash animate__infinite animate__slower text-xl pl-1 pt-0.5 inline-block"
-                          ></i>
-                        </div>
-                      </div>
-                      <div class="capitalize flex text-left w-1/3">
-                        <!-- <div
+                <div class="flex">
+                  <div class="border-r border-tertiary w-1/2">
+                    <div
+                      v-for="item in firstPanelTasks"
+                      :key="item.key"
+                      :style="{ height: taskContainerHeight }"
+                    >
+                      <div
+                        class="py-4 px-5"
+                        :class="{
+                          'animate__animated animate__slideInUp':
+                            !isAnimationCompleted
+                        }"
+                        @animationend="onAnimationEnd"
+                      >
+                        <div class="flex flex-row">
+                          <div class="flex w-1/3">
+                            <div
+                              :class="{
+                                'animate__animated animate__flash animate__infinite animate__slower bg-red-600':
+                                  item.is_delayed,
+                                'bg-green-600': !item.is_delayed
+                              }"
+                              class="h-5 mr-2 rounded-full w-5 mt-1.5"
+                            ></div>
+                            <div class="font-bold text-2xl">
+                              {{ item.name }}
+                            </div>
+                            <i
+                              v-if="item.priority > 2"
+                              class="fas fa-exclamation-circle animate__animated animate__flash animate__infinite animate__slower text-xl pl-2 pt-0.5"
+                            ></i>
+                            <div v-if="item.priority > 3" class="">
+                              <i
+                                class="fas fa-exclamation-circle animate__animated animate__flash animate__infinite animate__slower text-xl pl-1 pt-0.5 inline-block"
+                              ></i>
+                            </div>
+                          </div>
+                          <div class="capitalize flex text-left w-1/3">
+                            <!-- <div
                         :class="{
                           'bg-red-600': item.is_delayed,
                           'bg-green-600': !item.is_delayed
@@ -70,37 +78,120 @@
                         class="font-bold ml-auto px-3 py-0.5 rounded-md text-center text-md text-white w-3/4"
                       > -->
 
-                        <div
-                          :class="{
-                            'animate__animated animate__flash animate__infinite animate__slower ':
-                              item.is_delayed
-                          }"
-                          class="text-center text-xl w-full"
-                        >
-                          {{ item.date }}
+                            <div
+                              :class="{
+                                'animate__animated animate__flash animate__infinite animate__slower ':
+                                  item.is_delayed
+                              }"
+                              class="text-center text-xl w-full"
+                            >
+                              {{ item.date }}
+                            </div>
+                            <!-- </div> -->
+                          </div>
+                          <div class="w-1/3">
+                            <div
+                              :class="{
+                                'bg-red-600': item.status != 0,
+                                'bg-yellow-400': item.status == 0
+                              }"
+                              class="font-bold ml-auto px-3 py-0.5 rounded-md text-center text-md text-white w-3/4"
+                            >
+                              {{
+                                item.status == "0"
+                                  ? "Belum Selesai"
+                                  : "Belum Diperiksa"
+                              }}
+                            </div>
+                          </div>
                         </div>
-                        <!-- </div> -->
-                      </div>
-                      <div class="w-1/3">
                         <div
-                          :class="{
-                            'bg-red-600': item.status != 0,
-                            'bg-yellow-400': item.status == 0
-                          }"
-                          class="font-bold ml-auto px-3 py-0.5 rounded-md text-center text-md text-white w-3/4"
+                          class="border-b xborder-tertiary line-clamp-1 pb-4 pt-2 text-xl"
                         >
-                          {{
-                            item.status == "0"
-                              ? "Belum Selesai"
-                              : "Belum Diperiksa"
-                          }}
+                          {{ item.description }}
                         </div>
                       </div>
                     </div>
+                  </div>
+                  <div class="w-1/2">
                     <div
-                      class="xborder-b border-tertiary line-clamp-2 pb-4 pt-2 text-xl"
+                      v-for="item in secondPanelTasks"
+                      :key="item.key"
+                      :style="{ height: taskContainerHeight }"
                     >
-                      {{ item.description }}
+                      <div
+                        class="xborder border-tertiary py-4 px-5"
+                        :class="{
+                          'animate__animated animate__slideInUp':
+                            !isAnimationCompleted
+                        }"
+                        @animationend="onAnimationEnd"
+                      >
+                        <div class="flex flex-row">
+                          <div class="flex w-1/3">
+                            <div
+                              :class="{
+                                'animate__animated animate__flash animate__infinite animate__slower bg-red-600':
+                                  item.is_delayed,
+                                'bg-green-600': !item.is_delayed
+                              }"
+                              class="h-5 mr-2 rounded-full w-5 mt-1.5"
+                            ></div>
+                            <div class="font-bold text-2xl">
+                              {{ item.name }}
+                            </div>
+                            <i
+                              v-if="item.priority > 2"
+                              class="fas fa-exclamation-circle animate__animated animate__flash animate__infinite animate__slower text-xl pl-2 pt-0.5"
+                            ></i>
+                            <div v-if="item.priority > 3" class="">
+                              <i
+                                class="fas fa-exclamation-circle animate__animated animate__flash animate__infinite animate__slower text-xl pl-1 pt-0.5 inline-block"
+                              ></i>
+                            </div>
+                          </div>
+                          <div class="capitalize flex text-left w-1/3">
+                            <!-- <div
+                        :class="{
+                          'bg-red-600': item.is_delayed,
+                          'bg-green-600': !item.is_delayed
+                        }"
+                        class="font-bold ml-auto px-3 py-0.5 rounded-md text-center text-md text-white w-3/4"
+                      > -->
+
+                            <div
+                              :class="{
+                                'animate__animated animate__flash animate__infinite animate__slower ':
+                                  item.is_delayed
+                              }"
+                              class="text-center text-xl w-full"
+                            >
+                              {{ item.date }}
+                            </div>
+                            <!-- </div> -->
+                          </div>
+                          <div class="w-1/3">
+                            <div
+                              :class="{
+                                'bg-red-600': item.status != 0,
+                                'bg-yellow-400': item.status == 0
+                              }"
+                              class="font-bold ml-auto px-3 py-0.5 rounded-md text-center text-md text-white w-3/4"
+                            >
+                              {{
+                                item.status == "0"
+                                  ? "Belum Selesai"
+                                  : "Belum Diperiksa"
+                              }}
+                            </div>
+                          </div>
+                        </div>
+                        <div
+                          class="border-b xborder-tertiary line-clamp-1 pb-4 pt-2 text-xl"
+                        >
+                          {{ item.description }}
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -119,98 +210,6 @@
               </div>
             </div>
           </div>
-          <!-- <div class="overflow-hidden p-2 w-1/2">
-            <div
-              class="bg-white border-2 border-secondary flex flex-col h-full overflow-hidden rounded-md shadow-md"
-            >
-              <div class="flex flex-row mb-5 p-4 shadow-md">
-                <i class="fas fa-walking self-center text-4xl w-1/3"></i>
-                <h2 class="self-center text-2xl text-center w-full">
-                  Tugas Lapangan
-                </h2>
-                <div class="w-1/3">
-                  <div
-                    v-if="field_tasks.length > 0"
-                    :class="{
-                      'animate__animated animate__flash animate__infinite animate__slower':
-                        field_tasks.length > 10
-                    }"
-                    class="bg-secondary h-11 ml-auto p-1.5 text-2xl text-center text-white rounded-full w-11"
-                  >
-                    {{ field_tasks.length }}
-                  </div>
-                </div>
-              </div>
-              <div
-                v-if="field_tasks.length > 0"
-                class="flex-grow h-full x-overflow-scroll"
-              >
-                <div
-                  v-for="item in field_tasks"
-                  :key="item.id"
-                  class="pb-3 px-4"
-                >
-                  <div class="flex flex-row">
-                    <div class="flex w-2/4">
-                      <div class="font-bold text-2xl">{{ item.name }}</div>
-                      <i
-                        v-if="item.priority > 2"
-                        class="fas fa-exclamation-circle animate__animated animate__flash animate__infinite animate__slower text-xl pl-2 pt-0.5"
-                      ></i>
-                      <div v-if="item.priority > 3" class="">
-                        <i
-                          class="fas fa-exclamation-circle animate__animated animate__flash animate__infinite animate__slower text-xl pl-1 pt-0.5 inline-block"
-                        ></i>
-                      </div>
-                    </div>
-                    <div class="capitalize text-center w-1/4">
-                      <div
-                        :class="{
-                          'bg-red-600': item.is_delayed,
-                          'bg-green-600': !item.is_delayed
-                        }"
-                        class="font-bold mx-auto px-3 py-0.5 rounded-md text-center text-md text-white w-4/5"
-                      >
-                        {{ item.date }}
-                      </div>
-                    </div>
-                    <div class="w-1/4">
-                      <div
-                        :class="{
-                          'bg-red-600': item.status != 0,
-                          'bg-yellow-400': item.status == 0
-                        }"
-                        class="font-bold ml-auto px-3 py-0.5 rounded-md text-center text-md text-white w-full"
-                      >
-                        {{
-                          item.status == "0"
-                            ? "Belum Selesai"
-                            : "Belum Diperiksa"
-                        }}
-                      </div>
-                    </div>
-                  </div>
-                  <div
-                    class="border-b border-tertiary line-clamp-2 pb-4 pt-2 text-xl"
-                  >
-                    {{ item.description }}
-                  </div>
-                </div>
-              </div>
-              <div v-else class="flex flex-grow py-5">
-                <div class="m-auto w-4/5">
-                  <img
-                    class="h-full w-full"
-                    src="@/assets/images/undraw_blank_canvas_re_2hwy.svg"
-                  />
-                  <div class="p-2 text-2xl text-center">
-                    <i class="far fa-thumbs-up"></i> Luar Biasa! Tidak Ada Tugas
-                    Lapangan.
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div> -->
         </div>
         <div class="flex-grow-0 flex-shrink-0 p-2">
           <div
@@ -256,13 +255,12 @@
     </div>
     <div class="flex-none p-2 w-1/4">
       <div
-        class="bg-white border-2 border-secondary h-full overflow-hidden rounded-md shadow-md"
+        class="bg-white border-2 border-secondary flex flex-col h-full overflow-hidden rounded-md shadow-md"
       >
-        <div class="flex flex-row mb-5 p-4 shadow-md">
+        <div class="flex flex-row p-4 shadow-md">
           <div class="text-4xl self-center w-1/3">
             <span class="mdi mdi-account-group"></span>
           </div>
-
           <h2 class="col-span-5 self-center text-2xl text-center w-full">
             Tim Layanan
           </h2>
@@ -275,65 +273,70 @@
             </div>
           </div>
         </div>
-        <div class="flex flex-col">
+        <div ref="users-container" class="h-full overflow-hidden">
           <div
             v-for="user in users"
             :key="user.uid"
-            class="pb-3 px-4 h-[14.285%]"
+            class="h-full"
+            :style="{ height: userContainerHeight }"
           >
-            <div class="border-b border-tertiary flex pb-4">
-              <div class="relative w-1/4">
-                <img
-                  v-if="user.picture != ''"
-                  :x-class="userPresenceStatus(user)"
-                  :src="user.picture"
-                  class="border border-tertiary p-1 rounded-full w-full"
-                />
-                <img
-                  v-else
-                  src="@/assets/images/no-profile-pic.jpg"
-                  class="border border-tertiary p-1 rounded-full w-full"
-                />
+            <div class="px-4 h-full">
+              <div class="border-b border-tertiary flex h-full">
+                <div class="flex items-center relative w-1/4">
+                  <div>
+                    <img
+                      v-if="user.picture != ''"
+                      :x-class="userPresenceStatus(user)"
+                      :src="user.picture"
+                      class="border border-tertiary p-1 rounded-full w-full"
+                    />
+                    <img
+                      v-else
+                      src="@/assets/images/no-profile-pic.jpg"
+                      class="border border-tertiary p-1 rounded-full w-full"
+                    />
 
-                <div
-                  :class="userStatusBadge(user)"
-                  class="absolute border-4 border-white bottom-0 font-bold h-10 right-0 p-0.5 rounded-full text-center text-lg text-white w-10"
-                >
-                  {{ userStatusBadgeCount(user) }}
-                </div>
-              </div>
-              <div class="flex flex-col justify-center pl-3 w-3/4">
-                <div class="font-bold line-clamp-1 text-2xl">
-                  {{ user.name }}
-                </div>
-                <div
-                  v-for="(status, key) in user.status"
-                  :key="status.text"
-                  class="line-clamp-2 text-xl"
-                >
-                  <div
-                    v-if="user.current_status == key"
-                    class="animate__animated animate__slideInUp"
-                  >
-                    <span
-                      v-if="userStatusBadgeCount(user) > 1"
-                      :class="{
-                        'bg-secondary': !status.is_overdue,
-                        'bg-red-600': status.is_overdue
-                      }"
-                      class="px-2 py-0.5 rounded-md text-sm text-white"
-                      >{{ key + 1 }} / {{ userStatusBadgeCount(user) }}</span
-                    >&nbsp;
-                    <span
-                      v-if="userStatusBadgeCount(user) > 1"
-                      :class="{
-                        'bg-secondary': !status.is_overdue,
-                        'bg-red-600': status.is_overdue
-                      }"
-                      class="px-2 py-0.5 rounded-md text-sm text-white"
-                      >{{ status.created_time }}</span
+                    <div
+                      :class="userStatusBadge(user)"
+                      class="absolute border-4 border-white bottom-2 font-bold h-10 right-0 p-0.5 rounded-full text-center text-lg text-white w-10"
                     >
-                    &nbsp;{{ status.text }}
+                      {{ userStatusBadgeCount(user) }}
+                    </div>
+                  </div>
+                </div>
+                <div class="flex flex-col justify-center pl-3 w-3/4">
+                  <div class="font-bold line-clamp-1 text-2xl">
+                    {{ user.name }}
+                  </div>
+                  <div
+                    v-for="(status, key) in user.status"
+                    :key="status.text"
+                    class="line-clamp-2 text-xl"
+                  >
+                    <div
+                      v-if="user.current_status == key"
+                      class="animate__animated animate__slideInUp"
+                    >
+                      <span
+                        v-if="userStatusBadgeCount(user) > 1"
+                        :class="{
+                          'bg-secondary': !status.is_overdue,
+                          'bg-red-600': status.is_overdue
+                        }"
+                        class="px-2 py-0.5 rounded-md text-sm text-white"
+                        >{{ key + 1 }} / {{ userStatusBadgeCount(user) }}</span
+                      >&nbsp;
+                      <span
+                        v-if="userStatusBadgeCount(user) > 1"
+                        :class="{
+                          'bg-secondary': !status.is_overdue,
+                          'bg-red-600': status.is_overdue
+                        }"
+                        class="px-2 py-0.5 rounded-md text-sm text-white"
+                        >{{ status.created_time }}</span
+                      >
+                      &nbsp;{{ status.text }}
+                    </div>
                   </div>
                 </div>
               </div>
@@ -346,23 +349,17 @@
 </template>
 
 <script>
-// @ is an alias to /src
-// import HelloWorld from "@/components/HelloWorld.vue";
 import axios from "axios";
+import md5 from "md5";
 import demoData from "@/assets/js/demo-data.js";
 
 export default {
   name: "Home",
-  components: {
-    // HelloWorld,
-  },
+  components: {},
   data: function () {
     return {
-      tasks: demoData.tasks,
-      tasks_count: 0,
-      field_tasks: [],
-      field_tasks_count: 0,
-      users: demoData.users,
+      isAnimationCompleted: false,
+
       dayNames: [
         "Minggu",
         "Senin",
@@ -372,6 +369,16 @@ export default {
         "Jumat",
         "Sabtu"
       ],
+      clockHH: 0,
+      clockMM: 0,
+      clockSS: 0,
+      cycleTasksTimeoutHandler: null,
+      dateDayName: "Minggu",
+      dateDay: 1,
+      dateMonth: "Januari",
+      dateYear: 2000,
+      firstPanelCycleIndex: 0,
+      firstPanelTasks: [],
       monthNames: [
         "Januari",
         "Februari",
@@ -386,21 +393,24 @@ export default {
         "November",
         "Desember"
       ],
-      dateDayName: "Minggu",
-      dateDay: 1,
-      dateMonth: "Januari",
-      dateYear: 2000,
-      clockHH: 0,
-      clockMM: 0,
-      clockSS: 0,
-      taskItemContainerHeight: "auto",
+      hash: "",
+      secondPanelCycleIndex: 0,
+      secondPanelTasks: [],
+      taskContainerHeight: "auto",
+      taskMaxItemCount: 8,
+      tasks: demoData.tasks,
+      tasks_count: 0,
+      users: demoData.users,
+      userContainerHeight: "auto",
       weatherStatus: "",
       weatherTemp: 26,
-      weatherIconCode: "01d",
-      hash: ""
+      weatherIconCode: "01d"
     };
   },
   computed: {
+    tasksCount: function () {
+      return this.firstPanelTasks.length + this.secondPanelTasks.length;
+    },
     weatherIcon: function () {
       return (
         "http://openweathermap.org/img/wn/" + this.weatherIconCode + "@2x.png"
@@ -412,7 +422,6 @@ export default {
 
     self.fetchData();
     self.cycleStatus();
-    self.cycleTask();
     self.getWeather();
 
     setInterval(function () {
@@ -426,22 +435,19 @@ export default {
     setInterval(function () {
       self.getWeather();
     }, 7200000);
-
-    // console.log("S", this.$refs["tasks-container"]);
-    // console.log(self.$refs["tasks-container"].height);
   },
   methods: {
     userProfilePicture: function (user) {
       axios({
         method: "get",
         url:
-          "http://noc.maranatha.edu/staff/apps/ihollo/images/profile/" +
+          "https://dev.itcare.maranatha.edu/public/application/itcare/profile/" +
           user.uid +
           ".jpg"
       })
         .then(function () {
           user.picture =
-            "http://noc.maranatha.edu/staff/apps/ihollo/images/profile/" +
+            "https://dev.itcare.maranatha.edu/public/application/itcare/profile/" +
             user.uid +
             ".jpg";
         })
@@ -474,69 +480,67 @@ export default {
 
       axios({
         method: "get",
-        url: "http://noc.maranatha.edu/ds-service/",
+        url: "https://dev.itcare.maranatha.edu/itcare/api/servicerequest/digitalsignage/",
         responseType: "json"
       }).then(function (response) {
         if (
-          typeof response.hasj !== "undefined" &&
+          typeof response.data.hash !== "undefined" &&
           self.hash != response.data.hash
         ) {
-          response.data.presences.sort(function (item_1, item_2) {
-            return item_2.status.length - item_1.status.length;
-          });
-
           self.hash = response.data.hash;
           self.tasks_count = response.data.tasks_count;
           self.field_tasks_count = response.data.field_tasks_count;
 
-          self.field_tasks.splice(0);
+          self.users = response.data.users
+            .sort(function (item_1, item_2) {
+              return item_2.status.length - item_1.status.length;
+            })
+            .map(function (item) {
+              item.current_status = 0;
 
-          for (
-            let index = 0;
-            index < response.data.field_tasks.length;
-            index++
-          ) {
-            const task = response.data.field_tasks[index];
+              return item;
+            });
 
-            self.field_tasks.push(task);
-          }
-
-          self.tasks.splice(0);
-
-          for (let index = 0; index < response.data.tasks.length; index++) {
-            const task = response.data.tasks[index];
-
-            self.tasks.push(task);
-          }
-
-          self.users.splice(0);
-
-          for (let index = 0; index < response.data.presences.length; index++) {
-            // response.data.presences[index]["visible_status"] = 0;
-            const presence = response.data.presences[index];
-            presence["current_status"] = 0;
-            // presence["picture"] = "";
-
-            // self.userProfilePicture(presence);
-
-            // console.log(presence);
-
-            self.users.push(presence);
-          }
+          self.tasks = response.data.tasks;
+          self.sliceTasks();
         }
 
-        // console.log(response.data.tasks);
+        self.userContainerHeight =
+          self.$refs["users-container"].offsetHeight / 7 + "px";
+        self.taskContainerHeight =
+          self.$refs["tasks-container"].offsetHeight / 8 + "px";
       });
     },
     cycleTask: function () {
       const self = this;
 
-      setTimeout(function () {
-        const last_task = self.tasks.pop();
+      self.cycleTasksTimeoutHandler = null;
 
-        self.tasks.unshift(last_task);
-        self.cycleTask();
-      }, 4000);
+      // setTimeout(function () {
+      // const last_task = self.tasks.pop();
+      // self.tasks.unshift(last_task);
+
+      // self.firstPanelCycleIndex += 1;
+      // self.secondPanelCycleIndex += 1;
+
+      // const first_panel_removed = self.firstPanelTasks.shift();
+      // const second_panel_removed = self.secondPanelTasks.shift();
+
+      const removed_item = self.tasks.shift();
+
+      self.$nextTick(function () {
+        self.isAnimationCompleted = false;
+
+        self.tasks.push(removed_item);
+
+        self.sliceTasks();
+
+        // self.firstPanelTasks.push(first_panel_removed);
+        // self.secondPanelTasks.push(second_panel_removed);
+
+        // self.cycleTask();
+      });
+      // }, 5000);
     },
     cycleStatus: function () {
       let self = this;
@@ -582,8 +586,39 @@ export default {
         self.weatherIconCode = response.data.weather[0].icon;
         self.weatherStatus = response.data.weather[0].description;
         self.weatherTemp = Math.round(response.data.main.feels_like);
-        // console.log(response.data);
       });
+    },
+    sliceTasks: function () {
+      const self = this;
+
+      self.firstPanelTasks = self.tasks
+        .slice(0, self.taskMaxItemCount)
+        .map(function (item) {
+          item.key = md5(JSON.stringify(item));
+
+          return item;
+        });
+
+      self.secondPanelTasks = self.tasks
+        .slice(self.taskMaxItemCount, self.taskMaxItemCount * 2)
+        .map(function (item) {
+          item.key = md5(JSON.stringify(item));
+
+          return item;
+        });
+    },
+    onAnimationEnd: function () {
+      const self = this;
+
+      self.isAnimationCompleted = true;
+
+      if (self.cycleTasksTimeoutHandler !== null) {
+        clearTimeout(self.cycleTasksTimeoutHandler);
+      }
+
+      self.cycleTasksTimeoutHandler = setTimeout(function () {
+        self.cycleTask();
+      }, 8000);
     }
   }
 };

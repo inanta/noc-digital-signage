@@ -83,51 +83,58 @@ export default {
     {
       uid: 31,
       name: "Inanta Martsanto",
-      status: "Pengerjaan Digital Signage",
+      status: ["Pengerjaan Digital Signage"],
       status_type: "0",
       presence_out: null
     },
     {
       uid: 144,
       name: "Donny Trijatmiko",
-      status:
-        "Konfigurasi cPanel dan server untuk deployment CI/CD aplikasi digital signage",
+      status: [
+        "Konfigurasi cPanel dan server untuk deployment CI/CD aplikasi digital signage"
+      ],
       status_type: 1,
       presence_out: null
     },
     {
       uid: 1,
       name: "Paul McCartney",
+      status: [],
       status_type: 1,
       presence_out: 1
     },
     {
       uid: 2,
       name: "John Lennon",
+      status: [],
       status_type: 1,
       presence_out: 1
     },
     {
       uid: 3,
       name: "Ringo Starr",
+      status: [],
       status_type: 1,
       presence_out: 1
     },
     {
       uid: 4,
       name: "George Harrison",
+      status: [],
       status_type: 1,
       presence_out: 1
     },
     {
       uid: 5,
       name: "Freddie Mercury",
+      status: [],
       status_type: 1,
       presence_out: 1
     },
     {
       uid: 6,
       name: "Brian May",
+      status: [],
       status_type: 1,
       presence_out: 1
     }
